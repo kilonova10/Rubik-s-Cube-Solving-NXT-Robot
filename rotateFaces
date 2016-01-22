@@ -1,0 +1,1287 @@
+/*
+ * Function: rotates yellow face cw or ccw depending on input
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateYellow(int rotationAngle);
+
+/*
+ * Function: rotates orange face cw or ccw depending on input
+ * @int rotationAngle - positive input represents clockwise rotation
+ * 		in degrees, negative represents counterclockwise
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateOrange(int rotationAngle);
+
+/*
+ * Function: rotates red face cw or ccw depending on input
+ * @int rotationAngle - positive input represents clockwise rotation
+ * 		in degrees, negative represents counterclockwise
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateRed(int rotationAngle);
+
+/*
+ * Function: rotates blue face cw or ccw depending on input
+ * @int rotationAngle - positive input represents clockwise rotation
+ * 		in degrees, negative represents counterclockwise
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateBlue(int rotationAngle);
+
+/*
+ * Function: rotates green face cw or ccw depending on input
+ * @int rotationAngle - positive input represents clockwise rotation
+ * 		in degrees, negative represents counterclockwise
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateGreen(int rotationAngle);
+
+/*
+ * Function: rotates white face cw or ccw depending on input
+ * @int rotationAngle - positive input represents clockwise rotation
+ * 		in degrees, negative represents counterclockwise
+ * @return void
+ *
+ * Author: B.B. & R.B
+ */
+void rotateWhite(int rotationAngle);
+
+/*
+ * Global variables allowed as per discussion with Mike
+ */
+string bottomFace = "White";
+string frontFace = "Red";
+
+/*********************************************************************/
+
+void rotateRed(int rotationAngle)
+{
+	if(bottomFace == "White")
+	{
+		if(frontFace == "Red")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+			actuateArm();
+		else if(frontFace == "Blue")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "White";
+	}
+	else if(bottomFace == "Green")
+	{
+		if(frontFace == "Red")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+			actuateArm();
+		else if(frontFace == "White")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Green";
+	}
+	else if(bottomFace == "Orange")
+	{
+		if(frontFace == "Green")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Blue";
+		}
+		else if(frontFace == "Yellow")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "White";
+		}
+		else if(frontFace == "Blue")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Green";
+		}
+		else if(frontFace == "White")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Yellow";
+		}
+	}
+	else if(bottomFace == "Blue")
+	{
+		if(frontFace == "Orange")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Blue";
+	}
+	else if(bottomFace == "Yellow")
+	{
+		if(frontFace == "Orange")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Yellow";
+	}
+
+	bottomFace = "Red";
+
+	nMotorEncoder[motorA] = 0;
+
+	holdCube();
+
+	rotate(rotationAngle);
+
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	/*update array values (clockwise)*/
+
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i < 2; i++)
+		{
+			char temp1 = yellow[2][0];
+			char temp2 = yellow[2][1];
+			char temp3 = yellow[2][2];
+
+			yellow[2][0] = blue[2][2];
+			yellow[2][1] = blue[1][2];
+			yellow[2][2] = blue[0][2];
+
+			blue[2][2] = white[0][2];
+			blue[1][2] = white[0][1];
+			blue[0][2] = white[0][0];
+
+			white[0][2] = green[0][0];
+			white[0][1] = green[1][0];
+			white[0][0] = green[2][0];
+
+			green[0][0] = temp1;
+			green[1][0] = temp2;
+			green[2][0] = temp3;
+		}
+	}
+	else if(rotationAngle > 0)
+	{
+		char temp1 = yellow[2][0];
+		char temp2 = yellow[2][1];
+		char temp3 = yellow[2][2];
+
+		yellow[2][0] = blue[2][2];
+		yellow[2][1] = blue[1][2];
+		yellow[2][2] = blue[0][2];
+
+		blue[2][2] = white[0][2];
+		blue[1][2] = white[0][1];
+		blue[0][2] = white[0][0];
+
+		white[0][2] = green[0][0];
+		white[0][1] = green[1][0];
+		white[0][0] = green[2][0];
+
+		green[0][0] = temp1;
+		green[1][0] = temp2;
+		green[2][0] = temp3;
+	}
+
+	/*update array values (counter clockwise)*/
+	else
+		char temp1 = yellow[2][0];
+		char temp2 = yellow[2][1];
+		char temp3 = yellow[2][2];
+
+		yellow[2][0] = green[0][0];
+		yellow[2][1] = green[1][0];
+		yellow[2][2] = green[2][0];
+
+		green[0][0] = white[0][2];
+		green[1][0] = white[0][1];
+		green[2][0] = white[0][0];
+
+		white[0][2] = blue[2][2];
+		white[0][1] = blue[1][2];
+		white[0][0] = blue[0][2];
+
+		blue[2][2] = temp1;
+		blue[1][2] = temp2;
+		blue[0][2] = temp3;
+}
+
+void rotateGreen(int rotationAngle)
+{
+	if(bottomFace == "White")
+	{
+		if(frontFace == "Red")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			actuateArm();
+		}
+		frontFace = "White";
+	}
+	else if(bottomFace == "Orange")
+	{
+		if(frontFace == "Green")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+			actuateArm();
+		else if(frontFace == "White")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Orange";
+	}
+	else if(bottomFace == "Blue")
+	{
+		if(frontFace == "Orange")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Red";
+		}
+		else if(frontFace == "Yellow")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "White";
+		}
+		else if(frontFace == "Red")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Orange";
+		}
+		else if(frontFace == "White")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Yellow";
+		}
+	}
+	else if(bottomFace == "Red")
+	{
+		if(frontFace == "Blue")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Red";
+	}
+	else if(bottomFace == "Yellow")
+	{
+		if(frontFace == "Blue")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Yellow";
+	}
+
+	bottomFace = "Green";
+
+	holdCube();
+
+	rotate(rotationAngle);
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	/*update array values (clockwise)*/
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i < 2; i++)
+		{
+			char temp1 = yellow[2][2];
+			char temp2 = yellow[1][2];
+			char temp3 = yellow[0][2];
+
+			yellow[2][2] = red[2][2];
+			yellow[1][2] = red[1][2];
+			yellow[0][2] = red[0][2];
+
+			red[2][2] = white[2][2];
+			red[1][2] = white[1][2];
+			red[0][2] = white[0][2];
+
+			white[2][2] = orange[0][0];
+			white[1][2] = orange[1][0];
+			white[0][2] = orange[2][0];
+
+			orange[0][0] = temp1;
+			orange[1][0] = temp2;
+			orange[2][0] = temp3;
+		}
+	}
+	else if(rotationAngle == 90)
+	{
+		char temp1 = yellow[2][2];
+		char temp2 = yellow[1][2];
+		char temp3 = yellow[0][2];
+
+		yellow[2][2] = red[2][2];
+		yellow[1][2] = red[1][2];
+		yellow[0][2] = red[0][2];
+
+		red[2][2] = white[2][2];
+		red[1][2] = white[1][2];
+		red[0][2] = white[0][2];
+
+		white[2][2] = orange[0][0];
+		white[1][2] = orange[1][0];
+		white[0][2] = orange[2][0];
+
+		orange[0][0] = temp1;
+		orange[1][0] = temp2;
+		orange[2][0] = temp3;
+	}
+	/*update array values (counter clockwise)*/
+	else
+	{
+		char temp1 = yellow[2][2];
+		char temp2 = yellow[1][2];
+		char temp3 = yellow[0][2];
+
+		yellow[2][2] = orange[0][0];
+		yellow[1][2] = orange[1][0];
+		yellow[0][2] = orange[2][0];
+
+		orange[0][0] = white[2][2];
+		orange[1][0] = white[1][2];
+		orange[2][0] = white[0][2];
+
+		white[2][2] = red[2][2];
+		white[1][2] = red[1][2];
+		white[0][2] = red[0][2];
+
+		red[2][2] = temp1;
+		red[1][2] = temp2;
+		red[0][2] = temp3;
+	}
+}
+
+void rotateOrange(int rotationAngle)
+{
+	if(bottomFace == "White")
+	{
+		if(frontFace == "Green")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			actuateArm();
+		}
+		frontFace = "White";
+	}
+	else if(bottomFace == "Green")
+	{
+		if(frontFace == "Orange")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+			actuateArm();
+		else if(frontFace == "Yellow")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Green";
+	}
+	else if(bottomFace == "Red")
+	{
+		if(frontFace == "Blue")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Green";
+		}
+		else if(frontFace == "Yellow")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "White";
+		}
+		else if(frontFace == "Green")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Blue";
+		}
+		else if(frontFace == "White")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Yellow";
+		}
+	}
+	else if(bottomFace == "Blue")
+	{
+		if(frontFace == "Red")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Blue";
+	}
+	else if(bottomFace == "Yellow")
+	{
+		if(frontFace == "Red")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Yellow";
+	}
+
+	bottomFace = "Orange";
+
+
+	holdCube();
+
+	rotate(rotationAngle);
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i< 2; i++)
+		{
+			char temp1 = yellow[0][2];
+			char temp2 = yellow[0][1];
+			char temp3 = yellow[0][0];
+
+			yellow[0][2] = green[2][2];
+			yellow[0][1] = green[1][2];
+			yellow[0][0] = green[0][2];
+
+			green[2][2] = white[2][0];
+			green[1][2] = white[2][1];
+			green[0][2] = white[2][2];
+
+			white[2][0] = blue[0][0];
+			white[2][1] = blue[1][0];
+			white[2][2] = blue[2][0];
+
+			blue[0][0] = temp1;
+			blue[1][0] = temp2;
+			blue[2][0] = temp3;
+		}
+	}
+
+	/*update array values (clockwise)*/
+	else if(rotationAngle > 0)
+	{
+		char temp1 = yellow[0][2];
+		char temp2 = yellow[0][1];
+		char temp3 = yellow[0][0];
+
+		yellow[0][2] = green[2][2];
+		yellow[0][1] = green[1][2];
+		yellow[0][0] = green[0][2];
+
+		green[2][2] = white[2][0];
+		green[1][2] = white[2][1];
+		green[0][2] = white[2][2];
+
+		white[2][0] = blue[0][0];
+		white[2][1] = blue[1][0];
+		white[2][2] = blue[2][0];
+
+		blue[0][0] = temp1;
+		blue[1][0] = temp2;
+		blue[2][0] = temp3;
+	}
+
+	/*update array values (counter clockwise)*/
+	else
+	{
+		char temp1 = yellow[0][2];
+		char temp2 = yellow[0][1];
+		char temp3 = yellow[0][0];
+
+		yellow[0][2] = blue[0][0];
+		yellow[0][1] = blue[1][0];
+		yellow[0][0] = blue[2][0];
+
+		blue[0][0] = white[2][0];
+		blue[1][0] = white[2][1];
+		blue[2][0] = white[2][2];
+
+		white[2][0] = green[2][2];
+		white[2][1] = green[1][2];
+		white[2][2] = green[0][2];
+
+		green[2][2] = temp1;
+		green[1][2] = temp2;
+		green[0][2] = temp3;
+	}
+}
+
+void rotateBlue(int rotationAngle)
+{
+	if(bottomFace == "White")
+	{
+		if(frontFace == "Orange")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			actuateArm();
+		}
+		frontFace = "White";
+	}
+	else if(bottomFace == "Orange")
+	{
+		if(frontFace == "Blue")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+			actuateArm();
+		else if(frontFace == "Yellow")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Orange";
+	}
+	else if(bottomFace == "Green")
+	{
+		if(frontFace == "Red")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Orange";
+		}
+		else if(frontFace == "Yellow")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "White";
+		}
+		else if(frontFace == "Orange")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Red";
+		}
+		else if(frontFace == "White")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Yellow";
+		}
+	}
+	else if(bottomFace == "Red")
+	{
+		if(frontFace == "Green")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Red";
+	}
+	else if(bottomFace == "Yellow")
+	{
+		if(frontFace == "Green")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Yellow";
+	}
+
+	bottomFace = "Blue";
+
+	holdCube();
+
+	rotate(rotationAngle);
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i< 2; i++)
+		{
+			char temp1 = yellow[0][0];
+			char temp2 = yellow[1][0];
+			char temp3 = yellow[2][0];
+
+			yellow[0][0] = orange[2][2];
+			yellow[1][0] = orange[1][2];
+			yellow[2][0] = orange[0][2];
+
+			orange[2][2] = white[0][0];
+			orange[1][2] = white[1][0];
+			orange[0][2] = white[2][0];
+
+			white[0][0] = red[0][0];
+			white[1][0] = red[1][0];
+			white[2][0] = red[2][0];
+
+			red[0][0] = temp1;
+			red[1][0] = temp2;
+			red[2][0] = temp3;
+		}
+	}
+
+	/*update array values (clockwise)*/
+	else if(rotationAngle > 0)
+	{
+		char temp1 = yellow[0][0];
+		char temp2 = yellow[1][0];
+		char temp3 = yellow[2][0];
+
+		yellow[0][0] = orange[2][2];
+		yellow[1][0] = orange[1][2];
+		yellow[2][0] = orange[0][2];
+
+		orange[2][2] = white[0][0];
+		orange[1][2] = white[1][0];
+		orange[0][2] = white[2][0];
+
+		white[0][0] = red[0][0];
+		white[1][0] = red[1][0];
+		white[2][0] = red[2][0];
+
+		red[0][0] = temp1;
+		red[1][0] = temp2;
+		red[2][0] = temp3;
+	}
+
+	/*update array values (counter clockwise)*/
+	else
+	{
+		char temp1 = yellow[0][0];
+		char temp2 = yellow[1][0];
+		char temp3 = yellow[2][0];
+
+		yellow[0][0] = red[0][0];
+		yellow[1][0] = red[1][0];
+		yellow[2][0] = red[2][0];
+
+		red[0][0] = white[0][0];
+		red[1][0] = white[1][0];
+		red[2][0] = white[2][0];
+
+		white[0][0] = orange[2][2];
+		white[1][0] = orange[1][2];
+		white[2][0] = orange[0][2];
+
+		orange[2][2] = temp1;
+		orange[1][2] = temp2;
+		orange[0][2] = temp3;
+	}
+}
+
+void rotateYellow(int rotationAngle)
+{
+	if(bottomFace == "Red")
+	{
+		if(frontFace == "Blue")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			actuateArm();
+		}
+		frontFace = "Red";
+	}
+	else if(bottomFace == "Orange")
+	{
+		if(frontFace == "Yellow")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+			actuateArm();
+		else if(frontFace == "Green")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Orange";
+	}
+	else if(bottomFace == "White")
+	{
+		if(frontFace == "Red")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Orange";
+		}
+		else if(frontFace == "Blue")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Green";
+		}
+		else if(frontFace == "Orange")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Red";
+		}
+		else if(frontFace == "Green")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Blue";
+		}
+	}
+	else if(bottomFace == "Green")
+	{
+		if(frontFace == "White")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Green";
+	}
+	else if(bottomFace == "Blue")
+	{
+		if(frontFace == "White")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Blue";
+	}
+
+	bottomFace = "Yellow";
+
+	holdCube();
+
+	rotate(rotationAngle);
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i < 2; i++)
+		{
+			char temp1 = red[0][0];
+			char temp2 = red[0][1];
+			char temp3 = red[0][2];
+
+			red[0][0] = green[0][0];
+			red[0][1] = green[0][1];
+			red[0][2] = green[0][2];
+
+			green[0][0] = orange[0][0];
+			green[0][1] = orange[0][1];
+			green[0][2] = orange[0][2];
+
+			orange[0][0] = blue[0][0];
+			orange[0][1] = blue[0][1];
+			orange[0][2] = blue[0][2];
+
+			blue[0][0] = temp1;
+			blue[0][1] = temp2;
+			blue[0][2] = temp3;
+		}
+	}
+	/*update array values (clockwise)*/
+	else if(rotationAngle > 0)
+	{
+		char temp1 = red[0][0];
+		char temp2 = red[0][1];
+		char temp3 = red[0][2];
+
+		red[0][0] = green[0][0];
+		red[0][1] = green[0][1];
+		red[0][2] = green[0][2];
+
+		green[0][0] = orange[0][0];
+		green[0][1] = orange[0][1];
+		green[0][2] = orange[0][2];
+
+		orange[0][0] = blue[0][0];
+		orange[0][1] = blue[0][1];
+		orange[0][2] = blue[0][2];
+
+		blue[0][0] = temp1;
+		blue[0][1] = temp2;
+		blue[0][2] = temp3;
+	}
+
+	/*update array values (counter clockwise)*/
+	else
+	{
+		char temp1 = red[0][0];
+		char temp2 = red[0][1];
+		char temp3 = red[0][2];
+
+		red[0][0] = blue[0][0];
+		red[0][1] = blue[0][1];
+		red[0][2] = blue[0][2];
+
+		blue[0][0] = orange[0][0];
+		blue[0][1] = orange[0][1];
+		blue[0][2] = orange[0][2];
+
+		orange[0][0] = green[0][0];
+		orange[0][1] = green[0][1];
+		orange[0][2] = green[0][2];
+
+		green[0][0] = temp1;
+		green[0][1] = temp2;
+		green[0][2] = temp3;
+	}
+}
+
+void rotateWhite(int rotationAngle)
+{
+	if(bottomFace == "Red")
+	{
+		if(frontFace == "Green")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Blue")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+		{
+			actuateArm();
+		}
+		frontFace = "Red";
+	}
+	else if(bottomFace == "Orange")
+	{
+		if(frontFace == "White")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Green")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Yellow")
+			actuateArm();
+		else if(frontFace == "Blue")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		frontFace = "Orange";
+	}
+	else if(bottomFace == "Yellow")
+	{
+		if(frontFace == "Red")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Orange";
+		}
+		else if(frontFace == "Blue")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Green";
+		}
+		else if(frontFace == "Orange")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Red";
+		}
+		else if(frontFace == "Green")
+		{
+			actuateArm();
+			actuateArm();
+			frontFace = "Blue";
+		}
+	}
+	else if(bottomFace == "Green")
+	{
+		if(frontFace == "Yellow")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Green";
+	}
+	else if(bottomFace == "Blue")
+	{
+		if(frontFace == "Yellow")
+		{
+			actuateArm();
+		}
+		else if(frontFace == "Red")
+		{
+			rotate90(-NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "White")
+		{
+			rotate180(2*NINETY);
+			actuateArm();
+		}
+		else if(frontFace == "Orange")
+		{
+			rotate90(NINETY);
+			actuateArm();
+		}
+		frontFace = "Blue";
+	}
+
+	bottomFace = "White";
+
+	holdCube();
+
+	rotate(rotationAngle);
+	nMotorEncoder[motorA] += -rotationAngle;
+
+	releaseCube();
+
+	if(abs(rotationAngle) == 180)
+	{
+		for(int i = 0; i<2; i++)
+		{
+			char temp1 = red[2][0];
+			char temp2 = red[2][1];
+			char temp3 = red[2][2];
+
+			red[2][0] = blue[2][0];
+			red[2][1] = blue[2][1];
+			red[2][2] = blue[2][2];
+
+			blue[2][0] = orange[2][0];
+			blue[2][1] = orange[2][1];
+			blue[2][2] = orange[2][2];
+
+			orange[2][0] = green[2][0];
+			orange[2][1] = green[2][1];
+			orange[2][2] = green[2][2];
+
+			green[2][0] = temp1;
+			green[2][1] = temp2;
+			green[2][2] = temp3;
+		}
+	}
+
+	/*update array values (clockwise)*/
+	else if(rotationAngle > 0)
+	{
+		char temp1 = red[2][0];
+		char temp2 = red[2][1];
+		char temp3 = red[2][2];
+
+		red[2][0] = blue[2][0];
+		red[2][1] = blue[2][1];
+		red[2][2] = blue[2][2];
+
+		blue[2][0] = orange[2][0];
+		blue[2][1] = orange[2][1];
+		blue[2][2] = orange[2][2];
+
+		orange[2][0] = green[2][0];
+		orange[2][1] = green[2][1];
+		orange[2][2] = green[2][2];
+
+		green[2][0] = temp1;
+		green[2][1] = temp2;
+		green[2][2] = temp3;
+	}
+
+	/*update array values (counter clockwise)*/
+	else
+	{
+		char temp1 = red[2][0];
+		char temp2 = red[2][1];
+		char temp3 = red[2][2];
+
+		red[2][0] = green[2][0];
+		red[2][1] = green[2][1];
+		red[2][2] = green[2][2];
+
+		green[2][0] = orange[2][0];
+	  green[2][1] = orange[2][1];
+		green[2][2] = orange[2][2];
+
+		orange[2][0] = blue[2][0];
+		orange[2][1] = blue[2][1];
+		orange[2][2] = blue[2][2];
+
+		blue[2][0] = temp1;
+		blue[2][1] = temp2;
+		blue[2][2] = temp3;
+	}
+}
+
