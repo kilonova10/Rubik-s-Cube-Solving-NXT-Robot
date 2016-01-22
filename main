@@ -1,0 +1,42 @@
+#include "functions.h"
+
+task main()
+{
+	/*motors initialized*/
+	motor[motorA] = 0;
+	motor[motorB] = 0;
+	motor[motorC] = 0;
+
+	/*motorEncodes initialized*/
+	nMotorEncoder[motorA] = 0;
+	nMotorEncoder[motorB] = 0;
+	nMotorEncoder[motorC] = 0;
+
+	/*initialize colour sensor*/
+	SensorType[S1] = sensorColorNxtFULL;
+
+	displayString(0, "Insert cube and");
+	displayString(1,"press any button");
+	displayString(2, "to start.");
+
+	waitBRelease();
+
+	scanCube();
+
+	placeWhiteEdgePieces();
+
+	placeWhiteCornerPieces();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
