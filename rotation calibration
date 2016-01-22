@@ -1,0 +1,117 @@
+
+void rotateCube(int rotationAngle, int rotationSpeed)
+{
+	if(rotationAngle > 0)
+	{
+		while(nMotorEncoder[motorA] < rotationAngle + ROT_CONST)
+			motor[motorA] = rotationSpeed;
+		while(nMotorEncoder[motorA] > rotationAngle)
+			motor[motorA] = -rotationSpeed;
+	}
+	else
+	{
+		while(nMotorEncoder[motorA] > rotationAngle - ROT_CONST)
+			motor[motorA] = -rotationSpeed;
+		while(nMotorEncoder[motorA] < rotationAngle)
+			motor[motorA] = rotationSpeed;
+	}
+
+	motor[motorA] = 0;
+}
+
+void flipCube(int numFlips)
+{
+	for(int i = 0; i < numFlips; i++)
+	{
+		motor[motorB] = -25;
+		while(nMotorEncoder[motorB] > PUSHER_ARM_MAX_EXTENT)
+		{}
+		motor[motorB] = 25;
+		while(nMotorEncoder[motorB] < 0)
+		{}
+		motor[motorB] = 0;
+		wait1Msec(200);
+	}
+}
+
+void holdCube(void)
+{
+	motor[motorB] = -10;
+	while(nMotorEncoder[motorB] > HOLD_CUBE)
+	{}
+	motor[motorB] = 0;
+}
+
+void releaseCube(void)
+{
+	motor[motorB] = 10;
+	while(nMotorEncoder[motorB] < 2)
+	{}
+	motor[motorB] = 0;
+}
+
+void rotateRed(int rotationAngle)
+{
+	rotateCube(180, CUBE_ROT_SPD);
+	flipCube(1);
+	holdCube();
+
+	rotateCube(rotationAngle, CUBE_ROT_SPD);
+
+	motor[motorA] = 0;
+	releaseCube();
+	rotateCube(180, CUBE_ROT_SPD);
+	flipCube(1);
+}
+
+void rotate90()
+{
+	nMotorEncoder[motorA] = 0;
+	while (nMotorEncoder[motorA] < 90)
+	{
+		motor[motorA] = 50;
+	}
+	motor[motorA] = 0;
+	wait1Msec(100);
+	while (nMotorEncoder[motorA] > 92)
+		motor[motorA] = -15;
+	motor[motorA] = 0;
+}
+
+void rotate180()
+{
+	nMotorEncoder[motorA] = 0;
+	while (nMotorEncoder[motorA] < 179)
+	{
+		motor[motorA] = 50;
+	}
+	motor[motorA] = 0;
+	wait1Msec(100);
+	while (nMotorEncoder[motorA] > 182)
+		motor[motorA] = -15;
+	motor[motorA] = 0;
+}
+
+
+task main()
+{
+
+	/*motors initialized*/
+	motor[motorA] = 0;
+	motor[motorB] = 0;
+	motor[motorC] = 0;
+
+	/*motorEncodes initialized*/
+	nMotorEncoder[motorA] = 0;
+	nMotorEncoder[motorB] = 0;
+	nMotorEncoder[motorC] = 0;
+	holdCube();
+	rotate180();
+	releaseCube();
+for(int i = 0; i <10; i++)
+{
+//rotateRed(90);
+
+//rotateCube(180, CUBE_ROT_SPD);
+nMotorEncoder[motorA] = 0;
+}}
